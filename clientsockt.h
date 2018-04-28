@@ -121,6 +121,7 @@ public:
         unsigned char c=0x00;
         if(comlen<5)
         {
+            //小于最小的包
             return -2;
         }
 
