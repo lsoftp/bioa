@@ -119,7 +119,7 @@ public:
 		//int tmplen = 0;
         int comlen =e-s+1;
         unsigned char c=0x00;
-        if(comlen<15)
+        if(comlen<5)
         {
             return -2;
         }

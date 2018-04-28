@@ -9,6 +9,8 @@ USEFORM("src\fmMain.cpp", Form10);
 //---------------------------------------------------------------------------
 WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 {
+    
+    //
 	try
 	{
 		Application->Initialize();
