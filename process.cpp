@@ -14,7 +14,7 @@ ReagentArray g_reagent_array;
 TestRowArray g_test_row_array;
 ActionSequence g_action_sequence;
 CupInfoArray g_cup_array;
-//make init to work
+
 void testinitial()
 {   {
 	TestConfig tc={0, 0,0, 30,1 ,0,40,2,0,50,3,0,60, 1,2,3,4,0, 1, 349,560};
