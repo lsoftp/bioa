@@ -141,7 +141,7 @@ object Form10: TForm10
       Width = 101
       Height = 84
       Align = alTop
-      Caption = 'BitBtn1'
+      Caption = 'start'
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 5
