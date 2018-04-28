@@ -97,7 +97,7 @@ private://ÆÁ±Îº¯Êý
 };
 */
 
-
+extern LogFile log;
 #endif
 
 

@@ -9,6 +9,7 @@
 #include "windows.h"
 #include "gettime.h"
 #include "debugout.h"
+#include "LogFile.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -98,7 +99,7 @@ void HandleThread::HandleActionList()
 			{
 				//to do set testinstance status to 2
 				//....
-
+                log.Log("timeout");
 				break;
 			}
 			FD_ZERO(&fsWrite);
