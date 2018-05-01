@@ -145,6 +145,7 @@ object Form10: TForm10
       DoubleBuffered = True
       ParentDoubleBuffered = False
       TabOrder = 5
+      OnClick = BitBtn6Click
     end
   end
   object StatusBar1: TStatusBar

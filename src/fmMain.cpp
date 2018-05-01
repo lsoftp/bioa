@@ -5,6 +5,7 @@
 
 #include "fmMain.h"
 #include "debugout.h"
+#include "handlethread.h"
 #include "LogFile.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -78,6 +79,13 @@ void __fastcall TForm10::ToolButton4Click(TObject *Sender)
 void __fastcall TForm10::ToolButton5Click(TObject *Sender)
 {
 	pcWorkArea->ActivePageIndex = 4;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm10::BitBtn6Click(TObject *Sender)
+{
+	if(!g_handler->command)
+	g_handler->command=1;
 }
 //---------------------------------------------------------------------------
 
