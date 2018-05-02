@@ -16,6 +16,7 @@ using namespace std;
 #define  T4 100 //清洗所有杯子
 //---------------------------------------------------------------------------
 
+
 //测试项目步骤
 struct TestConfig{
 	int test_id;
@@ -58,7 +59,8 @@ struct TestRow{
 	int test_type;  // 空白1 定标 2，质控 3  常规 04
 	//TDateTime reg_time;
 	int sample_volume;
-	int  test_id;
+	int  test_id;  //测试方法id
+	int status;// 0 成功，1 超时，2 试剂不够
     int test_no;  //确定测试id
 
 };
@@ -72,6 +74,13 @@ struct Reagent_Info{
 	int reagent_id;
 	Reagent_pos r_pos;
 	double  left_volume;
+	char   bottletype; //试剂瓶类型
+	unsigned short height;//
+	double getSetVolume(){
+		//for test   to be modified
+		left_volume=height;
+		return left_volume;
+	}
 
 };
 typedef vector<Reagent_Info>  ReagentInfoArray;
@@ -89,6 +98,23 @@ public:
 	ReagentInfoArray  reagent_info_array[REAGENT_NUMBER];
 	void push(Reagent_Info ri){
 		reagent_info_array[ri.reagent_id].push_back(ri);
+	}
+
+	// return 0 failed ,1 success rp hold the pos
+	int getPos(Reagent_pos &rp,unsigned int reag_id,int v)
+	{
+		if(reag_id>= REAGENT_NUMBER){
+			return 0;
+		}
+		ReagentInfoArray ra= reagent_info_array[reag_id];
+		vector<Reagent_Info>::iterator  iri;
+		for (iri=ra.begin(); iri != ra.end(); iri++) {
+			if(iri->left_volume>=v){
+				rp=iri->r_pos;
+				return 1;
+			}
+		}
+		return 0;
 	}
 };
 
@@ -165,9 +191,10 @@ struct Action{
 		}get_result;
 		 //3 清洗反应杯
 		struct{
-			unsigned short cup_pos;
+			unsigned char cup_pos0;
+			unsigned char cup_pos1;
 		}wash_cup;
-		//4  清洗所有反应杯
+
 		//5 复位
 		//6 灌注
 		//7反应杯空白
@@ -175,10 +202,10 @@ struct Action{
 		//9反应杯注水
 		//10加样针清洗
 		//11程序检查
-		//12 试剂余量检测
+		//type 4 试剂余量检测
 		struct {
-			int  startpos;
-			int  endpos;
+			unsigned short  startpos;
+			unsigned short   endpos;
 		}reagent_check;
 
 	}params;
@@ -195,8 +222,10 @@ struct ActionRow{
 	int end_time;
 	int span_to_next; //seconds
 	int span_to_prev;
+	int if_send;
 	operator <(const ActionRow &a){ return start_time<a.start_time;}
 	int  toStream(unsigned char * dest);
+	ActionRow(){if_send=1;};
 };
 
 //sorted TestRowArray -->  action sequence when start

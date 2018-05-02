@@ -3,6 +3,10 @@
 #ifndef interfaceH
 #define interfaceH
 //---------------------------------------------------------------------------
+#define TEST_STEP_SUCCESS 0 //≤‚ ‘≤Ω÷Ë≥…π¶
+#define TEST_TIME_OUT 1 //≤‚ ‘≥¨ ±
+#define NOT_ENOUGH_REAGENT 2      // ‘º¡≤ªπª
+
 class Interface{
 public:
 	static void initTestArray();
@@ -11,6 +15,7 @@ public:
 	static void updateReagent(unsigned char circle, unsigned char pos, int v);
 	static void updateCup(unsigned char pos, unsigned char status);
 	static void pushTestResult(int test_no, char nums,float r1,float r2);
+	static void pushTestStatus(int test_num, int step, int status); //update memory and database
 };
 
 /**************************************************************

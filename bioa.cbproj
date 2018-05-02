@@ -23,7 +23,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<LinkPackageStatics>rtl.lib;vcl.lib</LinkPackageStatics>
+			<LinkPackageStatics>rtl.lib;vcl.lib;inet.lib</LinkPackageStatics>
 			<OutputExt>exe</OutputExt>
 			<ILINK_LibraryPath>src\util\;src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
 			<IncludePath>src\util\;src\;$(IncludePath)</IncludePath>
@@ -31,7 +31,7 @@
 			<_TCHARMapping>wchar_t</_TCHARMapping>
 			<ProjectType>CppVCLApplication</ProjectType>
 			<Multithreaded>true</Multithreaded>
-			<AllPackageLibs>rtl.lib;vcl.lib</AllPackageLibs>
+			<AllPackageLibs>rtl.lib;vcl.lib;inet.lib</AllPackageLibs>
 			<DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
 			<DCC_UnitAlias>WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE</DCC_UnitAlias>
 			<DynamicRTL>true</DynamicRTL>

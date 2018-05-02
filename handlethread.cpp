@@ -10,6 +10,7 @@
 #include "gettime.h"
 #include "debugout.h"
 #include "LogFile.h"
+#include "interface.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ unsigned char HandleThread::currentCmd=0;
 unsigned char HandleThread::started=0;
 int HandleThread ::command=0;
 int HandleThread::settime=0;
-	list<ActionRow>::iterator  HandleThread::li;
+list<ActionRow>::iterator  HandleThread::li;
 RecvBuf HandleThread::recvbuf;
 
 HandleThread * g_handler;
@@ -61,7 +62,7 @@ void __fastcall HandleThread::Execute()
 }
 
 void HandleThread::HandleActionList()
-{
+{ /*
 	TIMEVAL tv;
 	tv.tv_sec=0;
 	tv.tv_usec=10000;
@@ -76,6 +77,7 @@ void HandleThread::HandleActionList()
 		RecvBuf recvbuf;
 		//DP3("test_id %d   s %d e %d",li->ptestrow, li->start_time,li->end_time);
 		ActionRow ar=*li;
+
 		int s=ar.start_time;
 		int e=ar.end_time;
 		struct timeval s1,e1;
@@ -99,7 +101,7 @@ void HandleThread::HandleActionList()
 			{
 				//to do set testinstance status to 2
 				//....
-                log.Log("timeout");
+				log.Log("timeout");
 				break;
 			}
 			FD_ZERO(&fsWrite);
@@ -141,7 +143,7 @@ void HandleThread::HandleActionList()
 		next:
 	}
 
-
+    */
 }
 
 
@@ -374,6 +376,8 @@ void HandleThread::run()
 	//list<ActionRow> &a=g_action_sequence.action_list;
 		for(;;)
 		{
+			Interface::initTestArray();
+			//int sendout=1;
 			if(command==0)
 			{
 				//just recv
@@ -395,12 +399,22 @@ void HandleThread::run()
 			}
 			if((started)&&(!settime))
 			{
-
+				if(g_test_row_array.test_array[li->ptestrow].status>=NOT_ENOUGH_REAGENT)
+				{
+				   li->if_send=0;
+                }
 				s1=e1=start;
 				int s=li->start_time;
 				int e=li->end_time;
 				s1.tv_sec=s1.tv_sec+s;
 				e1.tv_sec=e1.tv_sec+e;
+
+				if(li->a.type==0x01){
+					if(!g_reagent_array.getPos(li->a.params.get_reagent.r_pos,li->a.params.get_reagent.reagent_id,li->a.params.get_reagent.sample_volume) ){
+					   li->if_send=0;
+					   //Interface::pushTestStatus(li->ptestrow,li->step,NOT_ENOUGH_REAGENT);
+					}
+				}
 				int l=li->toStream(sendbuf);
 				sendbuf[2]=getSn();
 				DP3("get sn settime %d, sn %d, retry %d",settime,sn,retry);
@@ -453,7 +467,7 @@ void HandleThread::run()
 					gettimeofday(&now, NULL);
 					if(command!=0 && started)
 					{
-						if(settime&&(span(now,start)>=0)&&retry<RETRY_TIME)
+						if(settime&&(span(now,start)>=0)&&retry<RETRY_TIME&&li->if_send)
 						{
 						   g_tcp_client.Send(msg.stream,msg.len);
 						   retry++;
