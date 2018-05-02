@@ -313,6 +313,8 @@ int HandleThread::getMsgFromBuf( int & state )
 				 //unsigned char replyc= rs.stream[5];
 					if((recvsn==sn))
 					{
+
+
 						li++;
 						settime=0;
 						if(li==g_action_sequence.action_list.end())
@@ -339,6 +341,36 @@ int HandleThread::getMsgFromBuf( int & state )
 	//this->stop();
 }
 
+void HandleThread::handleMsg(const RecvStream &r)
+{
+	unsigned char c= r.stream[0];
+	unsigned short h;
+	unsigned int i;
+	float r1,r2;
+	int numr;
+	switch(c){
+	case 0: Interface::pushTestStatus(li->ptestrow,li->step,r.stream[4]);
+			Interface::updateCup(li->a.params.get_sample.cup_pos,li->step);
+			//Interface:: to update sample volume
+
+			break;
+	case 1:  Interface::pushTestStatus(li->ptestrow,li->step,r.stream[4]);
+			Interface::updateCup(li->a.params.get_reagent.cup_pos,li->step);
+			TO_WORD(r.stream, 5,h);
+			//update height and volume
+			Interface::updateReagent(li->a.params.get_reagent.r_pos.circle,li->a.params.get_reagent.r_pos.pos,h);
+			break;
+	case 2:  Interface::pushTestStatus(li->ptestrow,li->step,r.stream[4]);
+			 Interface::updateCup(li->a.params.get_result.cup_pos,li->step);
+				numr=r.stream[5];
+				TO_DWORD(r.stream,6,i);
+				memcpy(&r1,&i,4);
+				TO_DWORD(r.stream,6,i);
+				memcpy(&r2,&i,4);
+			Interface::pushTestResult(::g_test_row_array.test_array[li->ptestrow].test_no,numr,r1,r2);
+			break;
+	}
+}
 int HandleThread::checkCode(unsigned char * original, int len)
 {
 	int i;

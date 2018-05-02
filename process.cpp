@@ -298,8 +298,7 @@ int ActionSequence::get_next_available(int i)
 	  }
 	  return endtime;
 }
-#define WORD_COPY(d,i,v) {d[i]=(0xff00&v)>>8; d[i+1]=(0x00ff&v);}
-#define DWORD_COPY(d,i,v) {d[i]=(0xff000000&v)>>24; d[i+1]=(0x00ff0000&v)>>16;d[i+2]=(0x0000ff00&v)>>8; d[i+3]=v&0xff;}
+
 int ActionRow::toStream(unsigned char * dest)
 {
 	int i=3,r=0;

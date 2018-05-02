@@ -4,15 +4,15 @@
 #define interfaceH
 //---------------------------------------------------------------------------
 #define TEST_STEP_SUCCESS 0 //≤‚ ‘≤Ω÷Ë≥…π¶
-#define TEST_TIME_OUT 1 //≤‚ ‘≥¨ ±
-#define NOT_ENOUGH_REAGENT 2      // ‘º¡≤ªπª
+#define TEST_TIME_OUT 9 //≤‚ ‘≥¨ ±
+#define NOT_ENOUGH_REAGENT 10      // ‘º¡≤ªπª
 
 class Interface{
 public:
 	static void initTestArray();
 	static void initTestrowArray();
 	static void initReagentArray();
-	static void updateReagent(unsigned char circle, unsigned char pos, int v);
+	static void updateReagent(unsigned char circle, unsigned char pos, int h);
 	static void updateCup(unsigned char pos, unsigned char status);
 	static void pushTestResult(int test_no, char nums,float r1,float r2);
 	static void pushTestStatus(int test_num, int step, int status); //update memory and database

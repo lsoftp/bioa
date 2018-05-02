@@ -27,6 +27,7 @@ private:
 	static int toComposedMsg(unsigned char * original,int origlen, unsigned char * composed, int* comlen);
 	static int addCheckCode(unsigned char * original, int len);
 	static int getMsgFromBuf( int & state);
+	static void handleMsg(const RecvStream &r);
 	static int checkCode(unsigned char * original, int len);
 	void  run();
 };

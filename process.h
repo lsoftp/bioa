@@ -15,6 +15,11 @@ using namespace std;
 #define  T2 10    //读取结果
 #define  T4 100 //清洗所有杯子
 //---------------------------------------------------------------------------
+#define WORD_COPY(d,i,v) {d[i]=(0xff00&v)>>8; d[i+1]=(0x00ff&v);}
+#define DWORD_COPY(d,i,v) {d[i]=(0xff000000&v)>>24; d[i+1]=(0x00ff0000&v)>>16;d[i+2]=(0x0000ff00&v)>>8; d[i+3]=v&0xff;}
+
+#define TO_WORD(d,i,v)  {v= ((0x0000|d[i])<<8)|d[i+1];}
+#define TO_DWORD(d,i,v) {v= (0x00000000|d[i])<<8; v=(v|d[i+1])<<8;v= (v|d[i+2])<<8;v=v|d[i+3];}
 
 
 //测试项目步骤
