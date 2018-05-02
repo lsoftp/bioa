@@ -376,7 +376,7 @@ void HandleThread::run()
 	//list<ActionRow> &a=g_action_sequence.action_list;
 		for(;;)
 		{
-			Interface::initTestArray();
+
 			//int sendout=1;
 			if(command==0)
 			{
@@ -412,7 +412,7 @@ void HandleThread::run()
 				if(li->a.type==0x01){
 					if(!g_reagent_array.getPos(li->a.params.get_reagent.r_pos,li->a.params.get_reagent.reagent_id,li->a.params.get_reagent.sample_volume) ){
 					   li->if_send=0;
-					   //Interface::pushTestStatus(li->ptestrow,li->step,NOT_ENOUGH_REAGENT);
+					   Interface::pushTestStatus(li->ptestrow,li->step,NOT_ENOUGH_REAGENT);
 					}
 				}
 				int l=li->toStream(sendbuf);
