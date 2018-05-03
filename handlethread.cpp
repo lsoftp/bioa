@@ -295,26 +295,31 @@ int HandleThread::getMsgFromBuf( int & state )
 			{
 
 				unsigned char c= rs.stream[2];
+
+
+				if(i)
+				{
+					if(acksn==c)
+					{
+					DP3("*****discard msg cmd %d, sn %d, command %d",rs.stream[0],c,command);
+					return r;
+					}
+				 }
 				if(i==0)
 				{
 					acksn=c;
 					i=1;
 				}
 
-				if(i)
-				{
-					if(acksn==c) return r;
-				 }
-
 				 unsigned char  recvcmd = rs.stream[0];
 				 if(recvcmd==currentCmd)
 				 {
-					unsigned char recvsn= rs.stream[4];
+					unsigned char recvsn= rs.stream[3];
 				 //unsigned char replyc= rs.stream[5];
 					if((recvsn==sn))
 					{
-
-
+						DP3("*****handlemsg cmd %d, sn %d, command %d",recvcmd,sn,command);
+						handleMsg(rs);
 						li++;
 						settime=0;
 						if(li==g_action_sequence.action_list.end())
@@ -484,6 +489,21 @@ void HandleThread::run()
 			iRet = select(1, &fsRead, &fsWrite, NULL, &tv);
 			if(0<iRet){
 		//read or write socket
+
+				if (FD_ISSET(g_tcp_client.clisockfd,&fsWrite))
+				{
+					gettimeofday(&now, NULL);
+					if(command!=0 && started)
+					{
+						if(settime&&(span(now,s1)>=0)&&retry<RETRY_TIME&&li->if_send)
+						{
+						   g_tcp_client.Send(msg.stream,msg.len);
+						   retry++;
+
+							DP3("send settime %d, sn %d, retry %d",settime,sn,retry);
+						}
+					}
+				}
 				if (FD_ISSET(g_tcp_client.clisockfd,&fsRead))
 				{
 					int rchars=g_tcp_client.Recv(recvbuf.stream+recvbuf.size,BUFFER_SIZE-recvbuf.size);
@@ -493,20 +513,6 @@ void HandleThread::run()
 						 //if(state!=0) goto next;
 					}
 					//if(state!=0) continue;
-				}
-				if (FD_ISSET(g_tcp_client.clisockfd,&fsWrite))
-				{
-					gettimeofday(&now, NULL);
-					if(command!=0 && started)
-					{
-						if(settime&&(span(now,start)>=0)&&retry<RETRY_TIME&&li->if_send)
-						{
-						   g_tcp_client.Send(msg.stream,msg.len);
-						   retry++;
-
-							DP3("send settime %d, sn %d, retry %d",settime,sn,retry);
-						}
-					}
 				}
 
 			}
