@@ -4,6 +4,8 @@
 #pragma hdrstop
 
 #include "process.h"
+#include "LogFile.h"
+#include "debugout.h"
 
 //---------------------------------------------------------------------------
 #define WASH_TYPE 1
@@ -89,6 +91,7 @@ void  ActionSequence::addsample(ActionRow &ar, int &lt,int pos, int v,int cuppos
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
+   LOG("add sample testsn %d testid %d st %d et %d  acttype %d pos %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,pos,v,cuppos);
 }
 void ActionSequence::addreagent(ActionRow &ar, int &lt,int rid, int v,int cuppos,int step,int i)
 {
@@ -106,9 +109,11 @@ void ActionSequence::addreagent(ActionRow &ar, int &lt,int rid, int v,int cuppos
 		ar.ptestrow=i;
 		lt=ar.end_time;
 		//arv.push_back(ar);
+		LOG("add reagent testsn %d testid %d st %d et %d  acttype %d rid %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,rid,v,cuppos);
 }
 void ActionSequence::readresult(ActionRow &ar, int &lt,int num, int w0, int w1,int cuppos,int step,int i)
 {
+	TestRow tr=g_test_row_array.test_array[i];
 	   ar.a.type=2;
    ar.a.params.get_result.cup_pos=cuppos;
    ar.a.params.get_result.wavenum= num;
@@ -119,6 +124,7 @@ void ActionSequence::readresult(ActionRow &ar, int &lt,int num, int w0, int w1,i
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
+   LOG("readresult testsn %d testid %d st %d et %d  acttype %d num %d w0 %d  w1 %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,num,w0,w1,cuppos);
 }
 void ActionSequence::adddiutesample(ActionRow &ar, int &lt, int v, int cuppos0,int cuppos,int step,int i)
 {
@@ -135,7 +141,7 @@ void ActionSequence::adddiutesample(ActionRow &ar, int &lt, int v, int cuppos0,i
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
-
+	LOG("add  dilute sample testsn %d testid %d st %d et %d  acttype %d fromcuppos %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,cuppos0,v,cuppos);
 }
 void ActionSequence::addsystemwater(ActionRow &ar, int &lt, int v, int cuppos,int step,int i)
 {
@@ -151,6 +157,7 @@ void ActionSequence::addsystemwater(ActionRow &ar, int &lt, int v, int cuppos,in
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
+   LOG("system water testsn %d testid %d st %d et %d  acttype %d  v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,v,cuppos);
 }
 void ActionSequence::insertTestRow(int i)
 {
@@ -210,6 +217,7 @@ void ActionSequence::insertTestRow(int i)
    {
 		j=atc.j1;
 		this->addsample(ar,lasttime,gi::get_sample_pos(i),gi::get_dilute_v(i),atc.j,0x1000,i);
+
 		arv.push_back(ar);
 		this->addreagent(ar,lasttime,gi::get_dilute_rid(i),(gi::get_dilutetimes(i)-1)*gi::get_dilute_v(i),atc.j,0x1001,i);
 		arv.push_back(ar);
@@ -460,6 +468,21 @@ int ActionRow::toStream(unsigned char * dest)
 		WORD_COPY(dest,i+2,a.params.get_result.wavelength0);
 		WORD_COPY(dest,i+4,a.params.get_result.wavelength1);
 		r = 9;
+		break;
+	case 13:
+		dest[1]=3;
+		v=a.params.system_water.v;
+		WORD_COPY(dest,i,v);
+		dest[i+2]=a.params.system_water.cup_pos;
+		r=6;
+		break;
+	case 14:
+		dest[1]=4;
+		dest[i+0]=a.params.get_dilute_sample.cup0;
+		dest[i+1]=a.params.get_dilute_sample.cup1;
+		v=a.params.get_dilute_sample.v;
+		WORD_COPY(dest ,i+2,v);
+		r=7;
 		break;
 	default:
 		dest[1]=0;

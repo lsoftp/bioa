@@ -5,7 +5,7 @@
 #include<windows.h>
 #include <tchar.h>
 #include <stdio.h>
-
+#include "LogFile.h"
 //用于输出信息到编译器输出窗口的宏定义
 //使用win API，DEBUG版本会执行，RELEASE版本则不会
 //还可以使用DebugView，WinDbg等工具查看输出
@@ -26,6 +26,13 @@
 #define DP2(fmt,var1,var2) ;
 #define DP3(fmt,var1,var2,var3) ;
 
+#endif
+
+
+#ifdef _DEBUG
+#define LOG(format,...) {char mybuf[512]; sprintf(mybuf,format,##__VA_ARGS__); g_log.Log(mybuf);}
+#else
+#define DPRINTK( x,... )
 #endif
 
 #endif

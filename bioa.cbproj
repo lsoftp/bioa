@@ -94,6 +94,7 @@
 			</CppCompile>
 			<None Include="ModelSupport_bioa\default.txaPackage"/>
 			<None Include="ModelSupport_bioa\default.txvpck"/>
+			<None Include="ModelSupport_bioa\std\default.txvpck"/>
 			<CppCompile Include="process.cpp">
 				<DependentOn>process.h</DependentOn>
 				<BuildOrder>8</BuildOrder>
