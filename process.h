@@ -351,7 +351,9 @@ public:
 	static int get_rid(int i,int testid,int step)
 	{
 		if(g_test_row_array.test_array[i].isreplace)
-			return get_replaceid(testid);
+			if  (get_reagentid(testid,step)!=-2)
+				return get_replaceid(testid);
+			else return -2;
 		else
 			return get_reagentid(testid,step);
 	}

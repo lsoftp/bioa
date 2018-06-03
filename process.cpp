@@ -18,15 +18,15 @@ CupInfoArray g_cup_array;
 void testinitial()
 {
 	{
-	TestConfig tc={0, -1,0,20,0,0, 30,1 ,0,40,2,0,50,3,0,60, 1,2,3,4,5,0, 2, 1,2,3,4,1, 349,560};
+	TestConfig tc={0, -2,0,20,0,0, 30,1 ,0,40,2,0,50,3,0,60, 1,2,3,4,5,0, 2, 1,2,3,4,1, 349,560};
 	g_test_array.push(tc);
 	}
 	{
-	TestConfig tc= {1, -1,0,20,1,0, 30,2 ,0,40,3,0,50,-1,0,60, 1,2,3,4,5,1,2,2, 2,2,3, 2, 349,560};
+	TestConfig tc= {1, -2,0,20,1,0, 30,2 ,0,40,3,0,50,-1,0,60, 1,2,3,4,5,1,2,2, 2,2,3, 2, 349,560};
 	g_test_array.push(tc);
 	}
 	{
-	TestConfig tc= {2, -1,0,20,3,0, 30,1 ,0,40,-1,0,50,-1,0,60,1,2,3,4,5, 2,2,2, 3,2,4, 2, 349,560};
+	TestConfig tc= {2, -2,0,20,3,0, 30,1 ,0,40,-1,0,50,-1,0,60,1,2,3,4,5, 2,2,2, 3,2,4, 2, 349,560};
 	g_test_array.push(tc);
 	}
 
@@ -219,12 +219,12 @@ void ActionSequence::insertTestRow(int i)
 			int tempid=  gi::get_rid(i,tid,k);
 			if(tempid!=-3)
 			{
-				if(tempid=-2)
+				if(tempid==-2)
 				{
 					this->adddiutesample(ar, lasttime, gi::get_reagentv(tid,k), atc.j,j,k, i);
 							arv.push_back(ar);
 				}
-				else if(tempid=-1)
+				else if(tempid==-1)
 				{
 					this->addsystemwater(ar,lasttime,gi::get_reagentv(tid,k),j,k,i);
 							arv.push_back(ar);
@@ -272,12 +272,12 @@ void ActionSequence::insertTestRow(int i)
 			int tempid=  gi::get_rid(i,tid,k);
 			if(tempid!=-3)
 			{
-				if(tempid=-2)   // sample
+				if(tempid==-2)   // sample
 				{
 					addsample(ar,lasttime,gi::get_sample_pos(i),gi::get_reagentv(tid,k),j,k,i);
 							arv.push_back(ar);
 				}
-				else if(tempid=-1)
+				else if(tempid==-1)
 				{
 					this->addsystemwater(ar,lasttime,gi::get_reagentv(tid,k),j,k,i);
 							arv.push_back(ar);

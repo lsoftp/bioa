@@ -21,6 +21,7 @@ void testinit()
 	//g_log.SetFileName(mylog);
 	//LogFile log1(mypath);
    //	g_log.Log("hahah");
+	char buf[512];
 	testinitial();
 	DP1("rows %d",g_test_row_array.test_array.size());
 	g_test_row_array.rearrange();
@@ -38,7 +39,8 @@ void testinit()
 	{
 		ActionRow ar= *li;
 		DP3("test_id %d   s %d e %d",g_test_row_array.test_array[li->ptestrow].test_id, li->start_time,li->end_time);
-
+		sprintf(buf,"test sn  %d testid %d st %d et %d ,artype %d", li->ptestrow,g_test_row_array.test_array[li->ptestrow].test_id, li->start_time,li->end_time,li->a.type);
+		g_log.Log(buf);
 	}
 	CCliSocket::makeupWSA();
 	g_tcp_client.init();
