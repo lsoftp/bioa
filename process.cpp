@@ -430,14 +430,16 @@ int ActionRow::toStream(unsigned char * dest)
 	dest[0]=a.type;
 	switch(a.type){
 	case 0:
-		dest[1]=6;
+		dest[1]=7;//length
 		dest[i+0]=a.params.get_sample.sample_pos;
 		dest[i+1]=a.params.get_sample.cup_pos;
 		v = a.params.get_sample.sample_volume;
 		WORD_COPY(dest,i+2,v);
 		dest[i+4]=a.params.get_sample.sample_type;
-		dest[i+5]=a.params.get_sample.wash_type;
-		r= 9;
+
+		dest[i+5]=a.params.get_sample.sam_cup_type;
+		dest[i+6]=a.params.get_sample.wash_type;
+		r= 10;
 		break;
 	case 1:
 		dest[1]=7;
