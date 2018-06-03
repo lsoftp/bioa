@@ -8,7 +8,7 @@
 #include "Logfile.h"
 
 //-----------------------------------------------------------------------------------------
-
+LogFile g_log("c:\\temp\\2018-04-28.log");
 LogFile::LogFile(const String szFileName)//设定日志文件名
 {
 	_hFile = INVALID_HANDLE_VALUE;

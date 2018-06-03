@@ -27,7 +27,7 @@ void __fastcall TForm10::ToolButton6Click(TObject *Sender)
 #include <tchar.h>
 #include <stdio.h>
 
-LogFile log("c:\\temp\\2018-04-28.log");
+
 
 void __fastcall TForm10::FormCreate(TObject *Sender)
 {
@@ -45,8 +45,8 @@ void __fastcall TForm10::FormCreate(TObject *Sender)
 
 	pcWorkArea->ActivePageIndex = 0;
 
-	log.Log("hello, log");
-	log.Log("hello, 中文....abc");
+	g_log.Log("hello, log");
+	g_log.Log("hello, 中文....abc");
 }
 //---------------------------------------------------------------------------
 

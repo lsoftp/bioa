@@ -46,7 +46,7 @@ void Interface::pushTestStatus(int test_num, int step, int status)
 {
 
    g_test_row_array.test_array[test_num].status=status;
-   int test_no= g_test_row_array.test_array[test_num].test_no;
+   //int test_no= g_test_row_array.test_array[test_num].test_no;
 
    // to do ,update database test_no info
 

@@ -92,6 +92,8 @@
 				<DependentOn>interface.h</DependentOn>
 				<BuildOrder>10</BuildOrder>
 			</CppCompile>
+			<None Include="ModelSupport_bioa\default.txaPackage"/>
+			<None Include="ModelSupport_bioa\default.txvpck"/>
 			<CppCompile Include="process.cpp">
 				<DependentOn>process.h</DependentOn>
 				<BuildOrder>8</BuildOrder>
@@ -174,6 +176,7 @@
 				<Platforms>
 					<Platform value="Win32">True</Platform>
 				</Platforms>
+				<ModelSupport>True</ModelSupport>
 			</BorlandProject>
 			<ProjectFileVersion>12</ProjectFileVersion>
 		</ProjectExtensions>

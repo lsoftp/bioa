@@ -6,7 +6,7 @@
 #include <tchar.h>
 //---------------------------------------------------------------------------
 USEFORM("src\fmMain.cpp", Form10);
-///for test
+//---------------------------------------------------------------------------
 #include "process.h"
 #include "clientsockt.h"
 #include "handlethread.h"
@@ -29,7 +29,7 @@ void testinit()
 	for(li=a.begin();li!=a.end();li++)
 	{
 		ActionRow ar= *li;
-		DP3("test_id %d   s %d e %d",li->ptestrow, li->start_time,li->end_time);
+		DP3("test_id %d   s %d e %d",g_test_row_array.test_array[li->ptestrow].test_id, li->start_time,li->end_time);
 
 	}
 	CCliSocket::makeupWSA();

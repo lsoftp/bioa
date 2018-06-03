@@ -372,7 +372,7 @@ void HandleThread::handleMsg(const RecvStream &r)
 				memcpy(&r1,&i,4);
 				TO_DWORD(r.stream,6,i);
 				memcpy(&r2,&i,4);
-			Interface::pushTestResult(::g_test_row_array.test_array[li->ptestrow].test_no,numr,r1,r2);
+			//Interface::pushTestResult(::g_test_row_array.test_array[li->ptestrow].test_no,numr,r1,r2);
 			break;
 	}
 }

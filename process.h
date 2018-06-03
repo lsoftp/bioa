@@ -6,12 +6,16 @@
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <string>
 using namespace std;
 #define TEST_NUMBER 512
 #define REAGENT_NUMBER 512
 #define CUP_NUMBER  44
 #define T0 10   //取样到反应杯最长时间，必须要在10s 内完成，包括通讯在内
 #define T1  10   // 取试剂到反应杯 包括搅拌 清洗等
+#define T3 10    // 加系统水周期
+#define T5 10    // 加稀释样品
+
 #define  T2 10    //读取结果
 #define  T4 100 //清洗所有杯子
 //---------------------------------------------------------------------------
@@ -26,6 +30,9 @@ using namespace std;
 struct TestConfig{
 	int test_id;
 
+	int reagent0;
+	int sample_type0;
+	int time0;
 	int reagent1;
 	int sample_type1;
 	int time1;
@@ -38,8 +45,17 @@ struct TestConfig{
 	int reagent4;
 	int sample_type4;
 	int time4;
-	int v1,v2,v3,v4;
+	int v0,v1,v2,v3,v4;
 	int priority;    //0 is highest
+
+	int repalcereagentid;
+
+	int method;//1 one point 2 two points 3 dynamic
+	// two points
+	int readstep;//0 ,1,2,3,4
+	// 3 dynamic
+	int readinterval;// read inteval after all reagents added
+	int readtimes;//
 
 	int wavenum;//读取波长数目
 	int wl0;//主波长
@@ -51,22 +67,26 @@ struct TestConfig{
 
 
 struct TestRow{
-	int sample_no;
+	string  test_row_id;
+	//int sample_no;
+
 	unsigned short position;
-	int sample_type;     //过量采样 1，正常采样 0
-	char pre_dilute; // 预稀释
-	int  dilute_info;
-	int dilute_type;//是否过量采样稀释
-	int dilute_reagent;
-	int sample_id;
-	int sample_cup_type;
+	int sample_type;     //过量采样 1，正常采样 0  缺省为0
+
+	int sample_cup_type; //采样杯类型
 	int priority; //smaller is highest  常规 1 加急 0
 	int test_type;  // 空白1 定标 2，质控 3  常规 04
 	//TDateTime reg_time;
-	int sample_volume;
+	int isdilute;//是否机器稀释
+	int dilutevolume;//稀释取样量
+	int dilutetimes;//稀释倍数
+	int dilutetime;//稀释时间
+	int dilute_reagent; //稀释试剂id
+
 	int  test_id;  //测试方法id
+	int isreplace;//是否替代
 	int status;// 0 成功，1 超时，2 试剂不够
-    int test_no;  //确定测试id
+	//int test_no;  //确定测试id
 
 };
 struct Reagent_pos{
@@ -129,6 +149,9 @@ struct CupInfo{
 	char status;
 };
 
+struct TwoCup{
+	int j,j1;
+};
 class CupInfoArray{
 public:
 	CupInfo cv[CUP_NUMBER];
@@ -143,10 +166,40 @@ public:
 	int getFreecup()
 	{
 		for(int i=0; i<CUP_NUMBER;i++)
-			if(!cv[i].is_in_use) return i;
+			if(!cv[i].is_in_use)
+			{
+				cv[i].is_in_use=1;
+				return i;
+			}
 		// full return -1
 		return -1;
-    }
+	}
+	bool getFree2cup(TwoCup & atc)
+	{
+		int j,j1;
+		j=getFreecup();
+		if (j==-1)
+		{
+			return false;
+
+		}
+		else
+		{
+			cv[j].is_in_use=1;
+			j1=getFreecup();
+			if(j1==-1)
+			{
+				return false;
+			}
+			else
+			{
+				cv[j1].is_in_use=1;
+				atc.j=j;
+				atc.j1=j1;
+				return true;
+			}
+		}
+	}
 };
 
 
@@ -177,6 +230,7 @@ struct Action{
 			int sample_volume;
 			char sample_type;
 			char wash_type;
+			char sam_cup_type;
 		}get_sample;
 		// 1 加试剂到反应杯
 		struct {
@@ -196,10 +250,10 @@ struct Action{
 		}get_result;
 		 //3 清洗反应杯
 		struct{
-			unsigned char cup_pos0;
-			unsigned char cup_pos1;
+			unsigned char cup_pos0;       //start
+			unsigned char cup_pos1;              //end
 		}wash_cup;
-
+		 //4 清洗所有反应杯
 		//5 复位
 		//6 灌注
 		//7反应杯空白
@@ -207,11 +261,23 @@ struct Action{
 		//9反应杯注水
 		//10加样针清洗
 		//11程序检查
-		//type 4 试剂余量检测
+		//12试剂余量检测
 		struct {
 			unsigned short  startpos;
 			unsigned short   endpos;
 		}reagent_check;
+		//13 加系统水
+		struct{
+			int v;
+			unsigned char cup_pos;
+		}system_water;
+		//14 加稀释后样品
+		struct{
+			unsigned cup0;  //from
+			unsigned cup1; //to
+			int v;
+			}get_dilute_sample;
+
 
 	}params;
 
@@ -247,6 +313,11 @@ public:
 	int getendtime();
 	int get_next_available(int i);
 	int get_available_time(vector<ActionRow> & av);//获取插入的时间
+	void  addsample(ActionRow &ar, int &lt,int pos, int v,int cuppos ,int step,int i);
+	void addreagent(ActionRow &ar, int &lt,int rid, int v,int cuppos ,int step,int i);
+	void readresult(ActionRow &ar, int &lt,int num, int w0, int w1,int cuppos,int step,int i);
+	void adddiutesample(ActionRow &ar, int &lt, int v, int cuppos0,int cuppos,int step,int i);
+	void addsystemwater(ActionRow &ar, int &lt, int v, int cuppos,int step,int i);
 };
 
 
@@ -256,4 +327,147 @@ extern ReagentArray g_reagent_array;
 extern TestRowArray g_test_row_array;
 extern ActionSequence g_action_sequence;
 
+class gi{
+public:
+
+	static int get_replaceid(int testid)
+	{
+		return g_test_array.test_config_array[testid].repalcereagentid;
+	}
+
+	static int get_reagentid(int testid,int step)
+	{
+		TestConfig &tc= g_test_array.test_config_array[testid];
+		int rid;
+		switch(step){
+			case 0: rid= tc.reagent0; break;
+			case 1: rid= tc.reagent1; break;
+			case 2: rid= tc.reagent2; break;
+			case 3: rid = tc.reagent3; break;
+			case 4: rid= tc.reagent4; break;
+		}
+		return rid;
+	}
+	static int get_rid(int i,int testid,int step)
+	{
+		if(g_test_row_array.test_array[i].isreplace)
+			return get_replaceid(testid);
+		else
+			return get_reagentid(testid,step);
+	}
+	static int get_reagentv(int testid, int step) {
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		int rid;
+		switch (step) {
+		case 0:
+			rid = tc.v0;
+			break;
+		case 1:
+			rid = tc.v1;
+			break;
+		case 2:
+			rid = tc.v2;
+			break;
+		case 3:
+			rid = tc.v3;
+			break;
+		case 4:
+			rid = tc.v4;
+			break;
+		}
+		return rid;
+	}
+
+	static int get_reagentt(int testid, int step) {
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		int rid;
+		switch (step) {
+		case 0:
+			rid = tc.time0;
+			break;
+		case 1:
+			rid = tc.time1;
+			break;
+		case 2:
+			rid = tc.time2;
+			break;
+		case 3:
+			rid = tc.time3;
+			break;
+		case 4:
+			rid = tc.time4;
+			break;
+		}
+		return rid;
+	}
+
+	static int get_testid(int testrowsn) {
+		return g_test_row_array.test_array[testrowsn].test_id;
+	}
+	static int get_is_replace(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].isreplace;
+	}
+	static int get_is_dilute(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].isdilute;
+	}
+	 static int get_sample_pos(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].position;
+	}
+	 static int get_dilute_v(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].dilutevolume;
+	}
+	static int get_dilute_rid(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].dilute_reagent;
+	}
+		 static int get_dilutetimes(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].dilutetimes;
+	}
+	static int get_dilutetime(int testrowsn)
+	{
+		return g_test_row_array.test_array[testrowsn].dilutetime;
+	}
+
+	static int get_method(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.method;
+	}
+		static int get_readstep(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.readstep;
+	}
+			static int get_wnum(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.wavenum;
+	}
+			static int get_w0(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.wl0;
+	}
+			static int get_w1(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.wl1;
+	}
+		static int get_readinterval(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.readinterval  ;
+	}
+		static int get_readtimes(int testid)
+	{
+		TestConfig &tc = g_test_array.test_config_array[testid];
+		return tc.readtimes;
+	}
+
+};
 #endif
