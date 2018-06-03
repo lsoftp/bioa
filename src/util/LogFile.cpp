@@ -6,9 +6,11 @@
 //---------------------------------------------------------------------------
 
 #include "Logfile.h"
+#include "Vcl.h"
 
 //-----------------------------------------------------------------------------------------
-LogFile g_log("c:\\temp\\2018-04-28.log");
+String mydir="c:\\temp\\";
+LogFile g_log(mydir+Now().FormatString("yyyy-mm-dd hh-nn-ss")+".log");
 LogFile::LogFile(const String szFileName)//设定日志文件名
 {
 	_hFile = INVALID_HANDLE_VALUE;

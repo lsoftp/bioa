@@ -11,8 +11,16 @@ USEFORM("src\fmMain.cpp", Form10);
 #include "clientsockt.h"
 #include "handlethread.h"
 #include "debugout.h"
+#include "LogFile.h"
+
 void testinit()
+
 {
+	//String mypath="c:\\temp\\test.log";
+	//String mylog=  mypath+Now().FormatString("yyyy-mm-dd hh-nn-ss")+".log";
+	//g_log.SetFileName(mylog);
+	//LogFile log1(mypath);
+   //	g_log.Log("hahah");
 	testinitial();
 	DP1("rows %d",g_test_row_array.test_array.size());
 	g_test_row_array.rearrange();
