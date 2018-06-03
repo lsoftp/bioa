@@ -30,7 +30,7 @@
 
 
 #ifdef _DEBUG
-#define LOG(format,...) {char mybuf[512]; sprintf(mybuf,format,##__VA_ARGS__); g_log.Log(mybuf);}
+#define LOG(format,...) {char mybuf[1024]; sprintf(mybuf,format,##__VA_ARGS__); g_log.Log(mybuf);}
 #else
 #define DPRINTK( x,... )
 #endif
