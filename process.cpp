@@ -24,11 +24,11 @@ void testinitial()
 	g_test_array.push(tc);
 	}
 	{
-	TestConfig tc= {1, -2,0,20,1,0, 30,2 ,0,40,3,0,50,-1,0,60, 1,2,3,4,5,1,2,2, 2,2,3, 2, 349,560};
+	TestConfig tc={1, -2,0,20,1,0, 30,2 ,0,40,3,0,50,-1,0,60, 1,2,3,4,5,1,2,2, 2,2,3, 2, 349,560};
 	g_test_array.push(tc);
 	}
 	{
-	TestConfig tc= {2, -2,0,20,3,0, 30,1 ,0,40,-1,0,50,-1,0,60,1,2,3,4,5, 2,2,2, 3,2,4, 2, 349,560};
+	TestConfig tc={2, -2,0,20,3,0, 30,1 ,0,40,-3,0,50,-3,0,60,1,2,3,4,5, 2,2,3, 3,2,4, 2, 349,560};
 	g_test_array.push(tc);
 	}
 
@@ -42,11 +42,11 @@ void testinitial()
 	{ TestRow tr={"2", 1,  0, 1, 0, 2,0,1,0,0, 1, 1, 2}; g_test_row_array.push(tr);}
 	{ TestRow tr={"3", 2,  0, 1, 0, 3,0,1,0,0, 1, 1, 2}; g_test_row_array.push(tr);}
 	{ TestRow tr={"4", 3,  0, 1, 0, 4,0,1,0,0, 1, 0, 3}; g_test_row_array.push(tr);}
-	{ TestRow tr={"5", 4,  0, 1, 0, 1,0,1,0,0, 1, 0, 1}; g_test_row_array.push(tr);}
+	{ TestRow tr={"5", 4,  0, 1, 0, 1,0,1,0,0, 1, 1, 0}; g_test_row_array.push(tr);}
 	{ TestRow tr={"6", 5,  0, 1, 0, 2,0,1,0,0, 1, 1, 2}; g_test_row_array.push(tr);}
 	{ TestRow tr={"7", 6,  0, 1, 0, 3,0,1,0,0, 1, 1, 2}; g_test_row_array.push(tr);}
 	{ TestRow tr={"8", 7,  0, 1, 0, 4,0,1,0,0, 1, 0, 4}; g_test_row_array.push(tr);}
-	{ TestRow tr={"9", 8,  0, 1, 0, 1,0,1,0,0, 1, 2, 4}; g_test_row_array.push(tr);}
+	{ TestRow tr={"9", 8,  0, 1, 0, 1,0,1,0,0, 1, 2, 0}; g_test_row_array.push(tr);}
 	{ TestRow tr={"10",9,  0, 1, 0, 2,0,1,0,0, 1, 1, 1}; g_test_row_array.push(tr);}
 	{ TestRow tr={"11",10, 0, 1, 0, 3,0,1,0,0, 1, 1, 1}; g_test_row_array.push(tr);}
 	{ TestRow tr={"12",11, 0, 1, 0, 4,0,1,0,0, 1, 0, 3}; g_test_row_array.push(tr);}
@@ -91,7 +91,7 @@ void  ActionSequence::addsample(ActionRow &ar, int &lt,int pos, int v,int cuppos
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
-   LOG("add sample testsn %d testid %d st %d et %d  acttype %d pos %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,pos,v,cuppos);
+   LOG("add sample testsn %s step %x testid %d st %d et %d  acttype %d pos %d v %d cuppos %d", tr.test_row_id.data(),step,tr.test_id,ar.start_time,ar.end_time,ar.a.type,pos,v,cuppos);
 }
 void ActionSequence::addreagent(ActionRow &ar, int &lt,int rid, int v,int cuppos,int step,int i)
 {
@@ -109,7 +109,7 @@ void ActionSequence::addreagent(ActionRow &ar, int &lt,int rid, int v,int cuppos
 		ar.ptestrow=i;
 		lt=ar.end_time;
 		//arv.push_back(ar);
-		LOG("add reagent testsn %d testid %d st %d et %d  acttype %d rid %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,rid,v,cuppos);
+		LOG("add reagent testsn %s step %x testid %d st %d et %d  acttype %d rid %d v %d cuppos %d", tr.test_row_id.data(),step,tr.test_id,ar.start_time,ar.end_time,ar.a.type,rid,v,cuppos);
 }
 void ActionSequence::readresult(ActionRow &ar, int &lt,int num, int w0, int w1,int cuppos,int step,int i)
 {
@@ -124,7 +124,7 @@ void ActionSequence::readresult(ActionRow &ar, int &lt,int num, int w0, int w1,i
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
-   LOG("readresult testsn %d testid %d st %d et %d  acttype %d num %d w0 %d  w1 %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,num,w0,w1,cuppos);
+   LOG("readresult testsn %s step %x testid %d st %d et %d  acttype %d num %d w0 %d  w1 %d cuppos %d", tr.test_row_id.data(),step,tr.test_id,ar.start_time,ar.end_time,ar.a.type,num,w0,w1,cuppos);
 }
 void ActionSequence::adddiutesample(ActionRow &ar, int &lt, int v, int cuppos0,int cuppos,int step,int i)
 {
@@ -141,7 +141,7 @@ void ActionSequence::adddiutesample(ActionRow &ar, int &lt, int v, int cuppos0,i
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
-	LOG("add  dilute sample testsn %d testid %d st %d et %d  acttype %d fromcuppos %d v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,cuppos0,v,cuppos);
+	LOG("add  dilute sample testsn %s step %x testid %d st %d et %d  acttype %d fromcuppos %d v %d cuppos %d", tr.test_row_id.data(),step,tr.test_id,ar.start_time,ar.end_time,ar.a.type,cuppos0,v,cuppos);
 }
 void ActionSequence::addsystemwater(ActionRow &ar, int &lt, int v, int cuppos,int step,int i)
 {
@@ -157,7 +157,7 @@ void ActionSequence::addsystemwater(ActionRow &ar, int &lt, int v, int cuppos,in
    ar.step=step;
    ar.ptestrow=i;
    lt=ar.end_time;
-   LOG("system water testsn %d testid %d st %d et %d  acttype %d  v %d cuppos %d", i,tr.test_id,ar.start_time,ar.end_time,ar.a.type,v,cuppos);
+   LOG("system water testsn %s step %x testid %d st %d et %d  acttype %d  v %d cuppos %d", tr.test_row_id.data(),step,tr.test_id,ar.start_time,ar.end_time,ar.a.type,v,cuppos);
 }
 void ActionSequence::insertTestRow(int i)
 {
@@ -266,8 +266,8 @@ void ActionSequence::insertTestRow(int i)
 			int readinterval=gi::get_readinterval(tid);
 			int rr,readtimes=gi::get_readtimes(tid);
 			for(rr=0;rr<readtimes;rr++)
-			{
-				this->readresult(ar,lasttime,gi::get_wnum(tid),gi::get_w0(tid),gi::get_w1(tid),j,rr,i);
+			{   int ttt=0x0300|rr;
+				this->readresult(ar,lasttime,gi::get_wnum(tid),gi::get_w0(tid),gi::get_w1(tid),j,ttt,i);
 						arv.push_back(ar);
 				lasttime+=readinterval;
 			}
@@ -320,7 +320,8 @@ void ActionSequence::insertTestRow(int i)
 			int rr,readtimes=gi::get_readtimes(tid);
 			for(rr=0;rr<readtimes;rr++)
 			{
-				this->readresult(ar,lasttime,gi::get_wnum(tid),gi::get_w0(tid),gi::get_w1(tid),j,rr,i);
+				int ttt=0x0300|rr;
+				this->readresult(ar,lasttime,gi::get_wnum(tid),gi::get_w0(tid),gi::get_w1(tid),j,ttt,i);
 						arv.push_back(ar);
 				lasttime+=readinterval;
 			}
