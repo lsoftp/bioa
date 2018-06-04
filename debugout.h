@@ -12,6 +12,7 @@
 
 #ifdef _DEBUG
 
+#define DP(fmt,...) {TCHAR sOut[1024];_stprintf_s(sOut,512,_T(fmt),##__VA_ARGS__);OutputDebugString(sOut);}
 #define DP0(fmt) {TCHAR sOut[512];_stprintf_s(sOut,512,_T(fmt));OutputDebugString(sOut);}
 #define DP1(fmt,var) {TCHAR sOut[512];_stprintf_s(sOut,512,_T(fmt),var);OutputDebugString(sOut);}
 #define DP2(fmt,var1,var2) {TCHAR sOut[512];_stprintf_s(sOut,512,_T(fmt),var1,var2);OutputDebugString(sOut);}
@@ -21,6 +22,7 @@
 
 #ifndef _DEBUG
 
+#define DP(fmt,...)
 #define DP0(fmt) ;
 #define DP1(fmt, var) ;
 #define DP2(fmt,var1,var2) ;
@@ -32,7 +34,7 @@
 #ifdef _DEBUG
 #define LOG(format,...) {char mybuf[1024]; sprintf(mybuf,format,##__VA_ARGS__); g_log.Log(mybuf);}
 #else
-#define DPRINTK( x,... )
+#define LOG(format,... )
 #endif
 
 #endif
